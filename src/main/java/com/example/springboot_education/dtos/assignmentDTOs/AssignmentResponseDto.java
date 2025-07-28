@@ -1,4 +1,4 @@
-package com.example.springboot_education.dtos;
+package com.example.springboot_education.dtos.assignmentDTOs;
 
 import java.util.Date;
 
