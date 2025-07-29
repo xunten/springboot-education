@@ -1,23 +1,31 @@
 package com.example.springboot_education.entities;
 
-import java.sql.Timestamp;
-
 import jakarta.persistence.*;
 import lombok.*;
 
-@Getter
-@Setter
+import java.sql.Timestamp;
+
 @Entity
+@Table(name = "ClassMember")
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "class_members")
-
+@Builder
 public class ClassMember {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long class_id;
-    private Long student_id;
-    private Timestamp joined_at;
-    }
 
+    @EmbeddedId
+    private ClassMemberId id;
 
+    @ManyToOne
+    @MapsId("class_id")
+    @JoinColumn(name = "class_id")
+    private Class aClass;  
+
+    @ManyToOne
+    @MapsId("student_id")
+    @JoinColumn(name = "student_id")
+    private Users student;
+
+    @Column(name = "joined_at")
+    private Timestamp joinedAt;
+}

@@ -4,6 +4,11 @@ import com.example.springboot_education.dtos.classMemberDTOs.ClassMemberResponse
 import com.example.springboot_education.dtos.classMemberDTOs.CreateClassMemberRequestDto;
 import com.example.springboot_education.dtos.classMemberDTOs.UpdateClassMemberRequestDto;
 import com.example.springboot_education.entities.ClassMember;
+import com.example.springboot_education.entities.ClassMemberId;
+import com.example.springboot_education.entities.Users;
+import com.example.springboot_education.entities.Class;
+import com.example.springboot_education.repositories.UsersJpaRepository;
+import com.example.springboot_education.repositories.ClassJpaRepository;
 import com.example.springboot_education.repositories.ClassMemberJpaRepository;
 import org.springframework.stereotype.Service;
 
@@ -15,53 +20,68 @@ import java.util.stream.Collectors;
 public class ClassMemberService {
 
     private final ClassMemberJpaRepository classMemberJpaRepository;
+    private final ClassJpaRepository classJpaRepository;
+    private final UsersJpaRepository userJpaRepository;
 
-    public ClassMemberService(ClassMemberJpaRepository classMemberJpaRepository) {
+    public ClassMemberService(ClassMemberJpaRepository classMemberJpaRepository,
+                              ClassJpaRepository classJpaRepository,
+                              UsersJpaRepository userJpaRepository) {
         this.classMemberJpaRepository = classMemberJpaRepository;
+        this.classJpaRepository = classJpaRepository;
+        this.userJpaRepository = userJpaRepository;
     }
 
-    private ClassMemberResponseDto convertToDto(ClassMember classMember) {
-        return new ClassMemberResponseDto(
-                classMember.getId(),
-                classMember.getStudent_id(),
-                classMember.getJoined_at()
-        );
-    }
+  private ClassMemberResponseDto convertToDto(ClassMember classMember) {
+    return new ClassMemberResponseDto(
+        classMember.getId().getClass_id(),         
+        classMember.getId().getStudent_id(),       
+        classMember.getJoinedAt()                
+    );
+}
 
     public List<ClassMemberResponseDto> getAllClassMembers() {
-        List<ClassMember> members = classMemberJpaRepository.findAll();
-        return members.stream()
+        return classMemberJpaRepository.findAll().stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
 
-    public ClassMemberResponseDto getById(Long id) {
+    public ClassMemberResponseDto getById(ClassMemberId id) {
         ClassMember member = classMemberJpaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("ClassMember not found"));
         return convertToDto(member);
     }
 
     public ClassMemberResponseDto create(CreateClassMemberRequestDto request) {
-        ClassMember member = new ClassMember();
-        member.setStudent_id(request.getStudent_id());
-        member.setJoined_at(new Timestamp(System.currentTimeMillis()));
+        Class clazz = classJpaRepository.findById(request.getClass_id())
+                .orElseThrow(() -> new RuntimeException("Class not found"));
+        Users student = userJpaRepository.findById(request.getStudent_id())
+                .orElseThrow(() -> new RuntimeException("Student not found"));
+
+        ClassMemberId id = new ClassMemberId(request.getClass_id(), request.getStudent_id());
+
+        ClassMember member = ClassMember.builder()
+                .id(id)
+                .aClass(clazz)
+                .student(student)
+                .joinedAt(new Timestamp(System.currentTimeMillis()))
+                .build();
 
         ClassMember saved = classMemberJpaRepository.save(member);
         return convertToDto(saved);
     }
 
-    public ClassMemberResponseDto update(Long id, UpdateClassMemberRequestDto request) {
-        ClassMember member = classMemberJpaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("ClassMember not found"));
+    public ClassMemberResponseDto update(ClassMemberId id, UpdateClassMemberRequestDto request) {
+    ClassMember member = classMemberJpaRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("ClassMember not found"));
 
-        member.setStudent_id(request.getStudent_id());
-        member.setJoined_at(request.getJoined_at());
+    member.setJoinedAt(request.getJoined_at());
 
-        ClassMember updated = classMemberJpaRepository.save(member);
-        return convertToDto(updated);
-    }
+    ClassMember updated = classMemberJpaRepository.save(member);
+    return convertToDto(updated);
+}
 
-    public void delete(Long id) {
+
+    public void delete(ClassMemberId id) {
         if (!classMemberJpaRepository.existsById(id)) {
             throw new RuntimeException("ClassMember not found");
         }
