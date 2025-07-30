@@ -31,7 +31,7 @@ public class Submission {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "student_id", nullable = false)
-    private User student;
+    private Users student;
 
     @NotNull
     @Column(name = "submitted_at", nullable = false)

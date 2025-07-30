@@ -29,16 +29,10 @@ public class Subject {
     @Column(name = "description")
     private String description;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "class_id", nullable = false)
-    private Class classField;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.SET_NULL)
     @JoinColumn(name = "created_by")
-    private User createdBy;
+    private Users createdBy;
 
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "created_at")

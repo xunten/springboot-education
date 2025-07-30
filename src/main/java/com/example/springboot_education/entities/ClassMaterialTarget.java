@@ -9,21 +9,21 @@ import org.hibernate.annotations.OnDeleteAction;
 @Getter
 @Setter
 @Entity
-@Table(name = "user_roles")
-public class UserRole {
+@Table(name = "class_material_targets")
+public class ClassMaterialTarget {
     @EmbeddedId
-    private UserRoleId id;
+    private ClassMaterialTargetId id;
 
-    @MapsId("userId")
+    @MapsId("classId")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "user_id", nullable = false)
-    private Users user;
+    @JoinColumn(name = "class_id", nullable = false)
+    private Class classField;
 
-    @MapsId("roleId")
+    @MapsId("materialId")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "role_id", nullable = false)
-    private Role role;
+    @JoinColumn(name = "material_id", nullable = false)
+    private ClassMaterial material;
 
 }

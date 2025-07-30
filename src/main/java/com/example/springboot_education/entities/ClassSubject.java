@@ -1,7 +1,6 @@
 package com.example.springboot_education.entities;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
@@ -13,31 +12,30 @@ import java.time.Instant;
 @Getter
 @Setter
 @Entity
-@Table(name = "attendances")
-public class Attendance {
-    @Id
-    @Column(name = "id", nullable = false)
-    private Integer id;
+@Table(name = "class_subjects")
+public class ClassSubject {
+    @EmbeddedId
+    private ClassSubjectId id;
 
-    @NotNull
+    @MapsId("classId")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "student_id", nullable = false)
-    private Users student;
+    @JoinColumn(name = "class_id", nullable = false)
+    private Class classField;
 
-    @NotNull
+    @MapsId("subjectId")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "schedule_id", nullable = false)
-    private ClassSchedule schedule;
+    @JoinColumn(name = "subject_id", nullable = false)
+    private Subject subject;
 
-    @NotNull
-    @Lob
-    @Column(name = "status", nullable = false)
-    private String status;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.SET_NULL)
+    @JoinColumn(name = "assigned_by")
+    private Users assignedBy;
 
     @ColumnDefault("CURRENT_TIMESTAMP")
-    @Column(name = "marked_at")
-    private Instant markedAt;
+    @Column(name = "created_at")
+    private Instant createdAt;
 
 }

@@ -1,36 +1,55 @@
 package com.example.springboot_education.entities;
 
 import jakarta.persistence.*;
-import lombok.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
-import java.sql.Timestamp;
+import java.time.Instant;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "classes")
-@Getter @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class Class {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Integer id;
 
-    @Column(name = "class_name")
+    @Size(max = 100)
+    @NotNull
+    @Column(name = "class_name", nullable = false, length = 100)
     private String className;
 
-    private String subject;
-
-    @Column(name = "school_year")
+    @NotNull
+    @Column(name = "school_year", nullable = false)
     private Integer schoolYear;
 
+    @NotNull
+    @Lob
+    @Column(name = "semester", nullable = false)
     private String semester;
 
+    @Lob
+    @Column(name = "description")
     private String description;
 
-    @Column(name = "created_at")
-    private Timestamp createdAt;
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "teacher_id", nullable = false)
+    private Users teacher;
 
-    
-    
+    @ColumnDefault("CURRENT_TIMESTAMP")
+    @Column(name = "created_at")
+    private Instant createdAt;
+
+    @ColumnDefault("CURRENT_TIMESTAMP")
+    @Column(name = "updated_at")
+    private Instant updatedAt;
 
 }

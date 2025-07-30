@@ -14,8 +14,8 @@ import java.time.Instant;
 @Getter
 @Setter
 @Entity
-@Table(name = "class_activities")
-public class ClassActivity {
+@Table(name = "activity_logs")
+public class ActivityLog {
     @Id
     @Column(name = "id", nullable = false)
     private Integer id;
@@ -23,26 +23,24 @@ public class ClassActivity {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "class_id", nullable = false)
-    private Class classField;
-
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private Users user;
 
+    @Size(max = 100)
     @NotNull
-    @Lob
-    @Column(name = "activity_type", nullable = false)
-    private String activityType;
+    @Column(name = "action_type", nullable = false, length = 100)
+    private String actionType;
+
+    @Size(max = 100)
+    @NotNull
+    @Column(name = "target_table", nullable = false, length = 100)
+    private String targetTable;
 
     @Column(name = "target_id")
     private Integer targetId;
 
-    @Size(max = 255)
-    @NotNull
-    @Column(name = "description", nullable = false)
+    @Lob
+    @Column(name = "description")
     private String description;
 
     @ColumnDefault("CURRENT_TIMESTAMP")

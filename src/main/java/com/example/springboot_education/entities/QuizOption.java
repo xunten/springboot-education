@@ -23,9 +23,9 @@ public class QuizOption {
     @JoinColumn(name = "question_id", nullable = false)
     private QuizQuestion question;
 
-    @Size(max = 255)
+    @Size(max = 5)
     @NotNull
-    @Column(name = "option_label", nullable = false)
+    @Column(name = "option_label", nullable = false, length = 5)
     private String optionLabel;
 
     @Size(max = 500)

@@ -28,6 +28,11 @@ public class QuizQuestion {
     @Column(name = "question_text", nullable = false)
     private String questionText;
 
+    @ColumnDefault("'single_choice'")
+    @Lob
+    @Column(name = "question_type")
+    private String questionType;
+
     @Column(name = "correct_option")
     private Character correctOption;
 

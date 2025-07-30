@@ -3,7 +3,6 @@ package com.example.springboot_education.controllers;
 import com.example.springboot_education.dtos.classMemberDTOs.ClassMemberResponseDto;
 import com.example.springboot_education.dtos.classMemberDTOs.CreateClassMemberRequestDto;
 import com.example.springboot_education.dtos.classMemberDTOs.UpdateClassMemberRequestDto;
-import com.example.springboot_education.entities.ClassMemberId;
 import com.example.springboot_education.services.ClassMemberService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;

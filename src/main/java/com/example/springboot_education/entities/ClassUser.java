@@ -27,7 +27,7 @@ public class ClassUser {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "student_id", nullable = false)
-    private User student;
+    private Users student;
 
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "joined_at")

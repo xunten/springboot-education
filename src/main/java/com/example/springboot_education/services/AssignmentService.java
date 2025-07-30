@@ -1,7 +1,5 @@
 package com.example.springboot_education.services;
 
-import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
 
@@ -53,8 +51,8 @@ public class AssignmentService {
 
         assignment.setTitle(dto.getTitle());
         assignment.setDescription(dto.getDescription());
-        assignment.setDueDate(dto.getDue_date().toInstant());
-        assignment.setMaxScore(BigDecimal.valueOf(dto.getMax_score()));
+        assignment.setDueDate(dto.getDueDate());
+        assignment.setMaxScore(dto.getMaxScore());
         assignment.setCreatedAt(Instant.now());
 
         // Lấy class từ DB và set vào assignment
@@ -72,8 +70,8 @@ public class AssignmentService {
 
         assignment.setTitle(dto.getTitle());
         assignment.setDescription(dto.getDescription());
-        assignment.setDueDate(dto.getDue_date().toInstant());
-        assignment.setMaxScore(BigDecimal.valueOf(dto.getMax_score()));
+        assignment.setDueDate(dto.getDueDate());
+        assignment.setMaxScore(dto.getMaxScore());
         assignment.setUpdatedAt(Instant.now());
 
         // Cập nhật class nếu có thay đổi

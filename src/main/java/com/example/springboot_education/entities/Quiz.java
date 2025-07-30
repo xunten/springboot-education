@@ -6,6 +6,8 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -24,10 +26,6 @@ public class Quiz {
     @Column(name = "title", nullable = false)
     private String title;
 
-    @Size(max = 10)
-    @Column(name = "grade", length = 10)
-    private String grade;
-
     @Lob
     @Column(name = "description")
     private String description;
@@ -42,12 +40,13 @@ public class Quiz {
     private LocalDate endDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     @JoinColumn(name = "class_id")
     private Class classField;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by")
-    private User createdBy;
+    private Users createdBy;
 
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "created_at")
@@ -56,6 +55,10 @@ public class Quiz {
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "updated_at")
     private Instant updatedAt;
+
+    @Size(max = 10)
+    @Column(name = "grade", length = 10)
+    private String grade;
 
     @Size(max = 100)
     @Column(name = "subject", length = 100)
