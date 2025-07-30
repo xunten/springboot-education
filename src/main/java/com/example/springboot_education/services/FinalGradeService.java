@@ -1,6 +1,5 @@
 package com.example.springboot_education.services;
 
-import com.example.springboot_education.entities.FinalGrade;
 import com.example.springboot_education.repositories.FinalGradeRepository;
 import org.springframework.stereotype.Service;
 

@@ -9,26 +9,17 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.LocalTime;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "assignments")
-public class Assignment {
+@Table(name = "class_schedules")
+public class ClassSchedule {
     @Id
     @Column(name = "id", nullable = false)
     private Integer id;
-
-    @Size(max = 255)
-    @NotNull
-    @Column(name = "title", nullable = false)
-    private String title;
-
-    @Lob
-    @Column(name = "description")
-    private String description;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -37,24 +28,24 @@ public class Assignment {
     private Class classField;
 
     @NotNull
-    @Column(name = "due_date", nullable = false)
-    private Instant dueDate;
+    @Column(name = "day_of_week", nullable = false)
+    private Byte dayOfWeek;
 
     @NotNull
-    @Column(name = "max_score", nullable = false, precision = 5, scale = 2)
-    private BigDecimal maxScore;
+    @Column(name = "start_time", nullable = false)
+    private LocalTime startTime;
+
+    @NotNull
+    @Column(name = "end_time", nullable = false)
+    private LocalTime endTime;
+
+    @Size(max = 100)
+    @Column(name = "location", length = 100)
+    private String location;
 
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "created_at")
     private Instant createdAt;
-
-    @Size(max = 500)
-    @Column(name = "file_path", length = 500)
-    private String filePath;
-
-    @Size(max = 50)
-    @Column(name = "file_type", length = 50)
-    private String fileType;
 
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "updated_at")

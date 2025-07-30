@@ -1,6 +1,5 @@
 package com.example.springboot_education.controllers;
 
-import com.example.springboot_education.entities.FinalGrade;
 import com.example.springboot_education.services.FinalGradeService;
 import org.springframework.web.bind.annotation.*;
 
