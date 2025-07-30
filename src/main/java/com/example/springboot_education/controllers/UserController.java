@@ -29,6 +29,7 @@ public List<UserResponseDto> getAllUsers() {
     public UserResponseDto getUserById(@PathVariable("id") Long id) {
         return this.userService.getUserById(id);
     }
+    
 
     // CREATE NEW USER
     @PostMapping("")

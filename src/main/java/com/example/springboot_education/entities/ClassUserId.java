@@ -10,7 +10,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Embeddable
-public class ClassMemberId implements Serializable {
+public class ClassUserId implements Serializable {
    private Integer class_id;
 private Integer student_id;
 

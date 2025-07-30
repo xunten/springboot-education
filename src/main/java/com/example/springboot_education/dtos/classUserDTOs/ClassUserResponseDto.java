@@ -1,4 +1,4 @@
-package com.example.springboot_education.dtos.classMemberDTOs;
+package com.example.springboot_education.dtos.classUserDTOs;
 
 import java.sql.Timestamp;
 import lombok.*;
@@ -6,8 +6,9 @@ import lombok.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ClassMemberResponseDto {
+public class ClassUserResponseDto {
     private Long class_id;
     private Long student_id;
     private Timestamp joined_at;
+   
 }

@@ -19,16 +19,16 @@ public class UserService {
         this.userJpaRepository = userJpaRepository;
     }
 
-    private UserResponseDto convertToDto(Users user) {
-        return new UserResponseDto(
-            user.getId(),
-            user.getUsername(),
-             user.getFull_name(),
-            user.getEmail(),
-            user.getImage_url(),
-            user.getRole()
-        );
-    }
+public UserResponseDto convertToDto(Users user) {
+    return UserResponseDto.builder()
+        .id(user.getId())
+        .username(user.getUsername())
+        .fullName(user.getFullName()) 
+        .imageUrl(user.getImageUrl())
+        .email(user.getEmail())
+        .role(user.getRole())
+        .build();
+}
 
     // Lấy toàn bộ user
     public List<UserResponseDto> getAllUsers() {
@@ -43,8 +43,8 @@ public UserResponseDto createUser(CreateUserRequestDto dto) {
     Users user = new Users();
     user.setUsername(dto.getUsername());
     user.setEmail(dto.getEmail());
-    user.setFull_name(dto.getFull_name());
-    user.setImage_url(dto.getImage_url());
+    user.setFullName(dto.getFullName());
+    user.setImageUrl(dto.getImageUrl());
     user.setRole(dto.getRole());
     user.setPassword(dto.getPassword());
     Users savedUser = userJpaRepository.save(user);
@@ -62,8 +62,8 @@ public UserResponseDto createUser(CreateUserRequestDto dto) {
         Users user = userJpaRepository.findById(id).orElseThrow();
         user.setUsername(dto.getUsername());
         user.setEmail(dto.getEmail());
-        user.setFull_name(dto.getFull_name());
-        user.setImage_url(dto.getImage_url());
+        user.setFullName(dto.getFullName());
+        user.setImageUrl(dto.getImageUrl());
         user.setRole(dto.getRole());
 
         Users updatedUser = userJpaRepository.save(user);

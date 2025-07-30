@@ -6,15 +6,15 @@ import lombok.*;
 import java.sql.Timestamp;
 
 @Entity
-@Table(name = "ClassMember")
+@Table(name = "ClassUser")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ClassMember {
+public class ClassUser {
 
     @EmbeddedId
-    private ClassMemberId id;
+    private ClassUserId id;
 
     @ManyToOne
     @MapsId("class_id")

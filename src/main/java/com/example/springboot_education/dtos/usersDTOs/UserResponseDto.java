@@ -1,19 +1,24 @@
 package com.example.springboot_education.dtos.usersDTOs;
 
 import com.example.springboot_education.entities.Users;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.*;
 
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class UserResponseDto {
-     private Long id;
+    private Long id;
     private String username;
-    private String full_name;
+
+   @JsonProperty("full_name")
+private String fullName;
+
     private String email;
-     private String image_url;
-     private Users.Role role;
+    @JsonProperty("image_url")
+private String imageUrl;
+    private Users.Role role;
 }
