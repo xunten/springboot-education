@@ -14,5 +14,6 @@ public class UserResponseDto {
     private String username;
     private String full_name;
     private String email;
+     private String image_url;
      private Users.Role role;
 }

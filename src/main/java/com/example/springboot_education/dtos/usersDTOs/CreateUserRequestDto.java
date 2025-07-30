@@ -25,6 +25,8 @@ public class CreateUserRequestDto {
     @Email(message = "Email is invalid")
     private String email;
 
+    
+    private String image_url;
     @NotBlank(message = "Password is required")
     private String password;
 

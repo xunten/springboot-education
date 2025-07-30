@@ -25,6 +25,7 @@ public class UserService {
             user.getUsername(),
              user.getFull_name(),
             user.getEmail(),
+            user.getImage_url(),
             user.getRole()
         );
     }
@@ -37,17 +38,18 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    // Tạo user mới
-    public UserResponseDto createUser(CreateUserRequestDto dto) {
-        Users user = new Users();
-        user.setUsername(dto.getUsername());
-        user.setEmail(dto.getEmail());
-        user.setRole(dto.getRole());
-        user.setPassword(dto.getPassword());
-
-        Users savedUser = userJpaRepository.save(user);
-        return convertToDto(savedUser);
-    }
+// Tạo user mới
+public UserResponseDto createUser(CreateUserRequestDto dto) {
+    Users user = new Users();
+    user.setUsername(dto.getUsername());
+    user.setEmail(dto.getEmail());
+    user.setFull_name(dto.getFull_name());
+    user.setImage_url(dto.getImage_url());
+    user.setRole(dto.getRole());
+    user.setPassword(dto.getPassword());
+    Users savedUser = userJpaRepository.save(user);
+    return convertToDto(savedUser);
+}
     // GET USER BY ID
     public UserResponseDto getUserById(Long id) {
         Users user = this.userJpaRepository.findById(id)
@@ -60,6 +62,8 @@ public class UserService {
         Users user = userJpaRepository.findById(id).orElseThrow();
         user.setUsername(dto.getUsername());
         user.setEmail(dto.getEmail());
+        user.setFull_name(dto.getFull_name());
+        user.setImage_url(dto.getImage_url());
         user.setRole(dto.getRole());
 
         Users updatedUser = userJpaRepository.save(user);

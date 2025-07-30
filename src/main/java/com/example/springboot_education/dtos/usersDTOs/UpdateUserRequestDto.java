@@ -17,8 +17,9 @@ public class UpdateUserRequestDto {
 
     @Email(message = "Email is invalid")
     private String email;
-
+    private String image_url;
     private String password;
 
+    
     private Role role;
 }
