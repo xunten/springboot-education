@@ -5,6 +5,8 @@ import lombok.*;
 
 import java.sql.Timestamp;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 @Entity
 @Table(name = "class_activities")
 @Getter @Setter
@@ -23,6 +25,8 @@ public class ClassActivity {
 
     private String description;
 
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "created_at")
     private Timestamp createdAt;
 
