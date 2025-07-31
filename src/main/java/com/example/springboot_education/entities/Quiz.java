@@ -9,14 +9,14 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.LocalDate;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "assignments")
-public class Assignment {
+@Table(name = "quizzes")
+public class Quiz {
     @Id
     @Column(name = "id", nullable = false)
     private Integer id;
@@ -30,34 +30,38 @@ public class Assignment {
     @Column(name = "description")
     private String description;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "class_id", nullable = false)
+    @Column(name = "time_limit")
+    private Integer timeLimit;
+
+    @Column(name = "start_date")
+    private LocalDate startDate;
+
+    @Column(name = "end_date")
+    private LocalDate endDate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.SET_NULL)
+    @JoinColumn(name = "class_id")
     private Class classField;
 
-    @NotNull
-    @Column(name = "due_date", nullable = false)
-    private Instant dueDate;
-
-    @NotNull
-    @Column(name = "max_score", nullable = false, precision = 5, scale = 2)
-    private BigDecimal maxScore;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "created_by")
+    private Users createdBy;
 
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "created_at")
     private Instant createdAt;
 
-    @Size(max = 500)
-    @Column(name = "file_path", length = 500)
-    private String filePath;
-
-    @Size(max = 50)
-    @Column(name = "file_type", length = 50)
-    private String fileType;
-
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "updated_at")
     private Instant updatedAt;
+
+    @Size(max = 10)
+    @Column(name = "grade", length = 10)
+    private String grade;
+
+    @Size(max = 100)
+    @Column(name = "subject", length = 100)
+    private String subject;
 
 }

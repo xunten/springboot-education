@@ -13,33 +13,28 @@ import java.util.Objects;
 @Getter
 @Setter
 @Embeddable
-public class ClassUserId implements Serializable {
+public class UserRoleId implements Serializable {
+    private static final long serialVersionUID = 552538177286132061L;
+    @NotNull
+    @Column(name = "user_id", nullable = false)
+    private Integer userId;
 
     @NotNull
-    @Column(name = "class_id", nullable = false)
-    private Long classId;
-
-    @NotNull
-    @Column(name = "student_id", nullable = false)
-    private Long studentId;
-
-    public ClassUserId(Long classId, Long studentId) {
-        this.classId = classId;
-        this.studentId = studentId;
-    }
-   public ClassUserId() {}
+    @Column(name = "role_id", nullable = false)
+    private Integer roleId;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        ClassUserId entity = (ClassUserId) o;
-        return Objects.equals(this.studentId, entity.studentId) &&
-                Objects.equals(this.classId, entity.classId);
+        UserRoleId entity = (UserRoleId) o;
+        return Objects.equals(this.roleId, entity.roleId) &&
+                Objects.equals(this.userId, entity.userId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(studentId, classId);
+        return Objects.hash(roleId, userId);
     }
+
 }

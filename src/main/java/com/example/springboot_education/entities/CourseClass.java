@@ -9,22 +9,30 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import java.math.BigDecimal;
 import java.time.Instant;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "assignments")
-public class Assignment {
+@Table(name = "classes")
+public class CourseClass {
     @Id
     @Column(name = "id", nullable = false)
-    private Integer id;
+    private Long id;
 
-    @Size(max = 255)
+    @Size(max = 100)
     @NotNull
-    @Column(name = "title", nullable = false)
-    private String title;
+    @Column(name = "class_name", nullable = false, length = 100)
+    private String className;
+
+    @NotNull
+    @Column(name = "school_year", nullable = false)
+    private Long schoolYear;
+
+    @NotNull
+    @Lob
+    @Column(name = "semester", nullable = false)
+    private String semester;
 
     @Lob
     @Column(name = "description")
@@ -33,28 +41,12 @@ public class Assignment {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "class_id", nullable = false)
-    private Class classField;
-
-    @NotNull
-    @Column(name = "due_date", nullable = false)
-    private Instant dueDate;
-
-    @NotNull
-    @Column(name = "max_score", nullable = false, precision = 5, scale = 2)
-    private BigDecimal maxScore;
+    @JoinColumn(name = "teacher_id", nullable = false)
+    private Users teacher;
 
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "created_at")
     private Instant createdAt;
-
-    @Size(max = 500)
-    @Column(name = "file_path", length = 500)
-    private String filePath;
-
-    @Size(max = 50)
-    @Column(name = "file_type", length = 50)
-    private String fileType;
 
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "updated_at")

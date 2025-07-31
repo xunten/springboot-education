@@ -1,14 +1,16 @@
 package com.example.springboot_education.dtos.classUserDTOs;
 
-import java.sql.Timestamp;
 import lombok.*;
 
-@Data
+import java.sql.Timestamp;
+
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class ClassUserResponseDto {
-    private Long class_id;
-    private Long student_id;
-    private Timestamp joined_at;
-   
+    private Long classId;
+    private Long studentId;
+    private Timestamp joinedAt;
 }

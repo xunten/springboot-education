@@ -1,19 +1,11 @@
 package com.example.springboot_education.dtos.classUserDTOs;
+import lombok.Getter;
+import lombok.Setter;
 
-import java.sql.Timestamp;
-
-import jakarta.validation.constraints.NotNull;
-import lombok.*;
-
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@Getter
+@Setter
 public class CreateClassUserRequestDto {
-      @NotNull(message = "student_id is required")
-    private Long student_id;
 
-    @NotNull(message = "class_id is required")
-    private Long class_id;
-    private Timestamp joined_at; 
+    private Long classId;
+    private Long studentId;
 }

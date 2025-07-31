@@ -1,38 +1,29 @@
 package com.example.springboot_education.entities;
 
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-
-import java.time.Instant;
 
 @Getter
 @Setter
 @Entity
-@Builder
-@Table(name = "class_user")
-public class ClassUser {
+@Table(name = "class_material_targets")
+public class ClassMaterialTarget {
     @EmbeddedId
-    private ClassUserId id;
+    private ClassMaterialTargetId id;
 
     @MapsId("classId")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "class_id", nullable = false)
-    private CourseClass classField;
+    private Class classField;
 
-    @MapsId("studentId")
+    @MapsId("materialId")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "student_id", nullable = false)
-    private Users student;
-
-    @ColumnDefault("CURRENT_TIMESTAMP")
-    @Column(name = "joined_at")
-    private Instant joinedAt;
+    @JoinColumn(name = "material_id", nullable = false)
+    private ClassMaterial material;
 
 }

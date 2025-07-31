@@ -5,17 +5,16 @@ import com.example.springboot_education.dtos.classUserDTOs.CreateClassUserReques
 import com.example.springboot_education.dtos.classUserDTOs.UpdateClassUserRequestDto;
 import com.example.springboot_education.entities.ClassUser;
 import com.example.springboot_education.entities.ClassUserId;
+import com.example.springboot_education.entities.CourseClass;
 import com.example.springboot_education.entities.Users;
-import com.example.springboot_education.entities.Class;
 import com.example.springboot_education.repositories.UsersJpaRepository;
-
-import lombok.Builder;
 
 import com.example.springboot_education.repositories.ClassJpaRepository;
 import com.example.springboot_education.repositories.ClassUserJpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,12 +34,11 @@ public class ClassUserService {
     }
 
   private ClassUserResponseDto convertToDto(ClassUser classUser) {
-    // Use builder if available, or update to match the actual constructor
     return ClassUserResponseDto.builder()
-        .classId(classUser.getId().getClass_id())
-        .studentId(classUser.getId().getStudent_id())
-        .joinedAt(classUser.getJoinedAt())
-        .build();
+            .classId(classUser.getId().getClassId())
+            .studentId(classUser.getId().getStudentId())
+            .joinedAt(Timestamp.from(classUser.getJoinedAt()))
+            .build();
 }
 
     public List<ClassUserResponseDto> getAllClassUsers() {
@@ -56,19 +54,19 @@ public class ClassUserService {
     }
 
     public ClassUserResponseDto create(CreateClassUserRequestDto request) {
-        Class clazz = classJpaRepository.findById(request.getClass_id())
+        CourseClass clazz = classJpaRepository.findById(request.getClassId())
                 .orElseThrow(() -> new RuntimeException("Class not found"));
-        Users student = userJpaRepository.findById(request.getStudent_id())
+        Users student = userJpaRepository.findById(request.getStudentId())
                 .orElseThrow(() -> new RuntimeException("Student not found"));
 
-        ClassUserId id = new ClassUserId(request.getClass_id(), request.getStudent_id());
+        ClassUserId id = new ClassUserId(request.getClassId(), request.getStudentId());
 
         ClassUser User = ClassUser.builder()
                 .id(id)
-                .aClass(clazz)
+              .classField(clazz)
                 .student(student)
-                .joinedAt(new Timestamp(System.currentTimeMillis()))
-                .build();
+   .joinedAt(Instant.now())
+                   .build();
 
         ClassUser saved = classUserJpaRepository.save(User);
         return convertToDto(saved);
@@ -78,7 +76,7 @@ public class ClassUserService {
     ClassUser User = classUserJpaRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("ClassUser not found"));
 
-    User.setJoinedAt(request.getJoined_at());
+    User.setJoinedAt(request.getJoined_at().toInstant());
 
     ClassUser updated = classUserJpaRepository.save(User);
     return convertToDto(updated);
