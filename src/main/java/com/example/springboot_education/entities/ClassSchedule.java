@@ -1,54 +1,46 @@
 package com.example.springboot_education.entities;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import java.sql.Time;
+import java.sql.Timestamp;
 
-import java.time.Instant;
-import java.time.LocalTime;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
-@Setter
 @Entity
 @Table(name = "class_schedules")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ClassSchedule {
     @Id
-    @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "class_id", nullable = false)
-    private Class classField;
+    @Column(name = "class_id", nullable = false)
+    private Integer classId;
 
-    @NotNull
     @Column(name = "day_of_week", nullable = false)
-    private Byte dayOfWeek;
+    private Integer dayOfWeek;
 
-    @NotNull
     @Column(name = "start_time", nullable = false)
-    private LocalTime startTime;
+    private Time startTime;
 
-    @NotNull
     @Column(name = "end_time", nullable = false)
-    private LocalTime endTime;
+    private Time endTime;
 
-    @Size(max = 100)
-    @Column(name = "location", length = 100)
+    @Column(name = "location", nullable = false)
     private String location;
 
-    @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "created_at")
-    private Instant createdAt;
+    private Timestamp createdAt;
 
-    @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "updated_at")
-    private Instant updatedAt;
-
+    private Timestamp updatedAt;
 }

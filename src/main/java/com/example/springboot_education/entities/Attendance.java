@@ -1,43 +1,36 @@
 package com.example.springboot_education.entities;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import java.sql.Timestamp;
 
-import java.time.Instant;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
-@Setter
 @Entity
 @Table(name = "attendances")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Attendance {
     @Id
-    @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "student_id", nullable = false)
-    private Users student;
+    @Column(name = "student_id", nullable = false)
+    private Integer studentId;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "schedule_id", nullable = false)
-    private ClassSchedule schedule;
+    @Column(name = "schedule_id", nullable = false)
+    private Integer scheduleId;
 
-    @NotNull
-    @Lob
     @Column(name = "status", nullable = false)
     private String status;
 
-    @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "marked_at")
-    private Instant markedAt;
-
+    private Timestamp markedAt;
 }
