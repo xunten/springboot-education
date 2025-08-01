@@ -1,5 +1,7 @@
 package com.example.springboot_education.dtos.usersDTOs;
-import com.example.springboot_education.entities.Users.Role;
+import java.util.List;
+
+import com.example.springboot_education.dtos.roleDTOs.RoleResponseDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,5 +24,5 @@ public class UserResponseDto {
     private String imageUrl;
     
     private String email;
-    private Role role;
+    private List<RoleResponseDto> roles;
 }

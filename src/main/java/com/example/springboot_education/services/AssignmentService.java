@@ -26,7 +26,7 @@ public class AssignmentService {
                 assignment.getId(),
                 assignment.getTitle(),
                 assignment.getDescription(),
-                assignment.getClassField().getId(), // assuming this method exists
+                assignment.getId(), // assuming this method exists
                 assignment.getDueDate(),
                 assignment.getMaxScore(),
                 assignment.getCreatedAt(),

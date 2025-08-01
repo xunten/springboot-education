@@ -38,11 +38,11 @@ public class CourseClass {
     @Column(name = "description")
     private String description;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "teacher_id", nullable = false)
-    private Users teacher;
+    // @NotNull
+    // @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    // @OnDelete(action = OnDeleteAction.CASCADE)
+    // @JoinColumn(name = "teacher_id", nullable = false)
+    // private Users teacher;
 
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "created_at")

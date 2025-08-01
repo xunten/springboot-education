@@ -19,25 +19,24 @@ public class UserController {
     public UserController(UserService userService) {
         this.userService = userService;
     }
-@GetMapping("")
-public List<UserResponseDto> getAllUsers() {
-    return userService.getAllUsers();
-}
-   
+
+    @GetMapping()
+    public List<UserResponseDto> getAllUsers() {
+        return userService.getAllUsers();
+    }
+
     // GET USER BY ID
     @GetMapping("/{id}")
     public UserResponseDto getUserById(@PathVariable("id") Long id) {
         return this.userService.getUserById(id);
     }
-    
 
     // CREATE NEW USER
     @PostMapping()
     public UserResponseDto createUser(@RequestBody @Valid CreateUserRequestDto createUserRequestDto) {
-        return this.userService.createUser(createUserRequestDto );
+        return this.userService.createUser(createUserRequestDto);
     }
-      
-    
+
     // UPDATE USER BY ID
     @PatchMapping("/{id}")
     public UserResponseDto updateUser(@PathVariable("id") Long id, @RequestBody UpdateUserRequestDto dto) {

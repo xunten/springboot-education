@@ -1,61 +1,72 @@
 package com.example.springboot_education.entities;
 
-import java.sql.Timestamp;
 import jakarta.persistence.*;
-import lombok.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
-@Data
-@Builder
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.List;
+
+@Getter
+@Setter
 @Entity
-@NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "users")
-
 public class Users {
-    public enum Role {
-    ADMIN,
-    STUDENT,
-    TEACHER
-}
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Long id;
+
+    @Size(max = 50)
+    @Column(name = "username", length = 50)
     private String username;
+
+    @Size(max = 255)
+    @NotNull
+    @Column(name = "password", nullable = false)
     private String password;
 
-    private String email; 
-   @Column(name = "full_name")
+    @Size(max = 100)
+    @Column(name = "full_name", length = 100)
     private String fullName;
 
+    @Size(max = 100)
+    @NotNull
+    @Column(name = "email", nullable = false, length = 100)
+    private String email;
+
+    @Size(max = 255)
     @Column(name = "image_url")
     private String imageUrl;
 
-     @Enumerated(EnumType.STRING)
-    private Role role;
+    // @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "created_at")
-    private Timestamp created_at;
+    private Timestamp createdAt;
+
+    // @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "updated_at")
-    private Timestamp updated_at;
-    
-    public Users(String username, String password, String fullName, String email, String imageUrl, Role role) {
-        this.username = username;
-        this.password = password;
-        this.fullName = fullName;
-        this.email = email;
-        this.imageUrl = imageUrl; 
-        this.role = role;
-        this.created_at = new Timestamp(System.currentTimeMillis());
-        this.updated_at = new Timestamp(System.currentTimeMillis());
-    }
-@PrePersist
+    private Timestamp updatedAt;
+
+    // @NotNull
+    // @Lob
+    // @Column(name = "role", nullable = false)
+    // private String role;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    private List<UserRole> userRoles;
+
+    @PrePersist
     protected void onCreate() {
-        created_at = new Timestamp(System.currentTimeMillis());
-        updated_at = new Timestamp(System.currentTimeMillis());
+        createdAt = new Timestamp(System.currentTimeMillis());
+        updatedAt = new Timestamp(System.currentTimeMillis());
     }
     
     @PreUpdate
     protected void onUpdate() {
-        updated_at = new Timestamp(System.currentTimeMillis());
+        updatedAt = new Timestamp(System.currentTimeMillis());
     }
 }
-    

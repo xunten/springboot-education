@@ -17,11 +17,11 @@ public class UserRoleId implements Serializable {
     private static final long serialVersionUID = 552538177286132061L;
     @NotNull
     @Column(name = "user_id", nullable = false)
-    private Integer userId;
+    private Long userId;
 
     @NotNull
     @Column(name = "role_id", nullable = false)
-    private Integer roleId;
+    private Long roleId;
 
     @Override
     public boolean equals(Object o) {

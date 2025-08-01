@@ -1,10 +1,14 @@
 package com.example.springboot_education.services;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import com.example.springboot_education.dtos.roleDTOs.RoleResponseDto;
 import com.example.springboot_education.dtos.usersDTOs.CreateUserRequestDto;
 import com.example.springboot_education.dtos.usersDTOs.UpdateUserRequestDto;
 import com.example.springboot_education.dtos.usersDTOs.UserResponseDto;
 import com.example.springboot_education.entities.Users;
+import com.example.springboot_education.exceptions.HttpException;
 import com.example.springboot_education.repositories.UsersJpaRepository;
 
 import java.util.List;
@@ -19,87 +23,94 @@ public class UserService {
         this.userJpaRepository = userJpaRepository;
     }
 
-// public UserResponseDto convertToDto(Users user) {
-//     return UserResponseDto.builder()
-//         .id(user.getId())
-//         .username(user.getUsername())
-//         .fullName(user.getFullName()) 
-//         .imageUrl(user.getImageUrl())
-//         .email(user.getEmail())
-//         .role(user.getRole())
-//         .build();
-// }
-  public UserResponseDto convertToDto(Users user) {
-        UserResponseDto userDto = new UserResponseDto();
-        userDto.setId(user.getId());
-        userDto.setUsername(user.getUsername());
-        userDto.setFullName(user.getFullName());
-        userDto.setImageUrl(user.getImageUrl());
-        userDto.setRole(user.getRole());
-        userDto.setEmail(user.getEmail());
-        return userDto;
-  }
-    
+    // Convert Users entity to UserResponseDto
+    private UserResponseDto convertToDto(Users user) {
+        List<RoleResponseDto> roles = user.getUserRoles().stream()
+                .map(userRole -> new RoleResponseDto(userRole.getRole().getId(), userRole.getRole().getName()))
+                .collect(Collectors.toList());
+
+        return UserResponseDto.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .fullName(user.getFullName())
+                .imageUrl(user.getImageUrl())
+                .email(user.getEmail())
+                .roles(roles) // Assuming getRoles() returns a List<Role>
+                .build();
+    }
+
     // Lấy toàn bộ user
     public List<UserResponseDto> getAllUsers() {
-        return userJpaRepository.findAll()
+        List<Users> users = userJpaRepository.findAllUsersWithRoles();
+        return users
                 .stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
 
-// Tạo user mới
-public UserResponseDto createUser(CreateUserRequestDto dto) {
-System.out.println("DTO full_name = " + dto.getFullName());
-    Users user = new Users();
-    user.setUsername(dto.getUsername());
-    user.setEmail(dto.getEmail());
-    user.setFullName(dto.getFullName());
-    user.setImageUrl(dto.getImageUrl());
-    user.setRole(dto.getRole());
-    user.setPassword(dto.getPassword());
-    Users savedUser = userJpaRepository.save(user);
-    return convertToDto(savedUser);
-}
+    // Tạo user mới
+    public UserResponseDto createUser(CreateUserRequestDto dto) {
 
-    //     public UserResponseDto createUser(CreateUserRequestDto createUserRequestDto) {
+        // Check if email already exists
+        if (this.userJpaRepository.existsByEmail(dto.getEmail())) {
+            throw new HttpException("Email already exists: " + dto.getEmail(), HttpStatus.CONFLICT);
+        }
 
-    //    Users user = new Users();
-    //     user.setUsername(createUserRequestDto.getUsername());
-    //     user.setFullName(createUserRequestDto.getFullName());
-    //     user.setEmail(createUserRequestDto.getEmail());
-    //     user.setPassword(createUserRequestDto.getPassword());
-    //     user.setRole(createUserRequestDto.getRole());
-    //     user.setImageUrl(createUserRequestDto.getImageUrl());
-    //     Users createdUsers= this.userJpaRepository.save(user);
-    //     return convertToDto(createdUsers);
+        Users user = new Users();
+        user.setUsername(dto.getUsername());
+        user.setEmail(dto.getEmail());
+        user.setFullName(dto.getFullName());
+        user.setImageUrl(dto.getImageUrl());
+        user.setPassword(dto.getPassword());
+        Users savedUser = userJpaRepository.save(user);
+        return convertToDto(savedUser);
+    }
+
+    // public UserResponseDto createUser(CreateUserRequestDto createUserRequestDto)
+    // {
+
+    // Users user = new Users();
+    // user.setUsername(createUserRequestDto.getUsername());
+    // user.setFullName(createUserRequestDto.getFullName());
+    // user.setEmail(createUserRequestDto.getEmail());
+    // user.setPassword(createUserRequestDto.getPassword());
+    // user.setRole(createUserRequestDto.getRole());
+    // user.setImageUrl(createUserRequestDto.getImageUrl());
+    // Users createdUsers= this.userJpaRepository.save(user);
+    // return convertToDto(createdUsers);
     // }
     // GET USER BY ID
     public UserResponseDto getUserById(Long id) {
         Users user = this.userJpaRepository.findById(id)
-                        .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
         return convertToDto(user);
     }
 
     // Cập nhật
     public UserResponseDto updateUser(Long id, UpdateUserRequestDto dto) {
-        Users user = userJpaRepository.findById(id).orElseThrow();
+        Users user = userJpaRepository.findById(id)
+        .orElseThrow(() -> new HttpException("User not found with id: " + id, HttpStatus.NOT_FOUND));
+
         user.setUsername(dto.getUsername());
         user.setEmail(dto.getEmail());
         user.setFullName(dto.getFullName());
         user.setImageUrl(dto.getImageUrl());
-        user.setRole(dto.getRole());
-// Update timestamp
-        user.setUpdated_at(new java.sql.Timestamp(System.currentTimeMillis()));
-        
+
+        if (dto.getPassword() != null && !dto.getPassword().isEmpty()) {
+            user.setPassword(dto.getPassword());
+        }
+
         Users updatedUser = userJpaRepository.save(user);
         return convertToDto(updatedUser);
-   
+
     }
 
     // Xoá
     public void deleteUser(Long id) {
-        userJpaRepository.findById(id).orElseThrow();
+        if (!userJpaRepository.existsById(id)) {
+            throw new HttpException("User not found with id: " + id, HttpStatus.NOT_FOUND);
+        }
+        
         userJpaRepository.deleteById(id);
     }
 }

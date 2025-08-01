@@ -30,11 +30,11 @@ public class Assignment {
     @Column(name = "description")
     private String description;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "class_id", nullable = false)
-    private Class classField;
+    // @NotNull
+    // @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    // @OnDelete(action = OnDeleteAction.CASCADE)
+    // @JoinColumn(name = "class_id", nullable = false)
+    // private CourseClass classField;
 
     @NotNull
     @Column(name = "due_date", nullable = false)
