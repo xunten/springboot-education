@@ -32,11 +32,12 @@ public List<UserResponseDto> getAllUsers() {
     
 
     // CREATE NEW USER
-    @PostMapping("")
-    public UserResponseDto createUser(@RequestBody @Valid CreateUserRequestDto dto) {
-        return this.userService.createUser(dto);
+    @PostMapping()
+    public UserResponseDto createUser(@RequestBody @Valid CreateUserRequestDto createUserRequestDto) {
+        return this.userService.createUser(createUserRequestDto );
     }
-
+      
+    
     // UPDATE USER BY ID
     @PatchMapping("/{id}")
     public UserResponseDto updateUser(@PathVariable("id") Long id, @RequestBody UpdateUserRequestDto dto) {

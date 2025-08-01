@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/class-Users")
+@RequestMapping("/api/class-user")
 public class ClassUserController {
 
     private final ClassUserService classUserService;
