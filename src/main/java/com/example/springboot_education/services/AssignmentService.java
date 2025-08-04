@@ -1,9 +1,13 @@
 package com.example.springboot_education.services;
 
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.time.ZoneId;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,6 +19,7 @@ import com.example.springboot_education.entities.Assignment;
 import com.example.springboot_education.repositories.AssignmentJpaRepository;
 
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
 @Service
@@ -48,19 +53,43 @@ public class AssignmentService {
         return convertToDto(assignment);
     }
 
-    public AssignmentResponseDto createAssignment(CreateAssignmentRequestDto dto) {
-        Assignment assignment = new Assignment();
+//    public AssignmentResponseDto createAssignment(CreateAssignmentRequestDto dto) {
+//        Assignment assignment = new Assignment();
+//
+//        assignment.setTitle(dto.getTitle());
+//        assignment.setClassId(dto.getClassId());
+//        assignment.setDescription(dto.getDescription());
+//        assignment.setDueDate(dto.getDueDate());
+//        assignment.setMaxScore(dto.getMaxScore());
+//        assignment.setFilePath(dto.getFilePath());
+//        assignment.setFileType(dto.getFileType());
+//
+//        Assignment savedAssignment = assignmentJpaRepository.save(assignment);
+//        return convertToDto(savedAssignment);
+//    }
 
-        assignment.setTitle(dto.getTitle());
+    //    Create assignment with file
+    public AssignmentResponseDto createAssignmentWithFile(CreateAssignmentRequestDto dto, MultipartFile file) throws IOException {
+        String uploadDir = "uploads/assignments";
+        Files.createDirectories(Paths.get(uploadDir));
+
+        String filename = UUID.randomUUID() + "_" + file.getOriginalFilename();
+        Path filePath = Paths.get(uploadDir, filename);
+        Files.write(filePath, file.getBytes());
+
+        Assignment assignment = new Assignment();
         assignment.setClassId(dto.getClassId());
+        assignment.setTitle(dto.getTitle());
         assignment.setDescription(dto.getDescription());
         assignment.setDueDate(dto.getDueDate());
         assignment.setMaxScore(dto.getMaxScore());
-        assignment.setFilePath(dto.getFilePath());
-        assignment.setFileType(dto.getFileType());
 
-        Assignment savedAssignment = assignmentJpaRepository.save(assignment);
-        return convertToDto(savedAssignment);
+        // Set file info from uploaded file
+        assignment.setFilePath(filePath.toString());
+        assignment.setFileType(file.getContentType());
+
+        Assignment saved = assignmentJpaRepository.save(assignment);
+        return convertToDto(saved);
     }
 
     public AssignmentResponseDto updateAssignment(Long id, UpdateAssignmentRequestDto dto) {
@@ -81,7 +110,12 @@ public class AssignmentService {
     }
 
     public void deleteAssignment(Long id) {
-        Assignment assignment = assignmentJpaRepository.findById(id).orElseThrow();
+        Assignment assignment = assignmentJpaRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Assignment not found with id: " + id));
         assignmentJpaRepository.delete(assignment);
+    }
+
+    public Assignment getAssignmentEntityById(Long id) {
+        return assignmentJpaRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Assignment not found with id: " + id));
     }
 }
