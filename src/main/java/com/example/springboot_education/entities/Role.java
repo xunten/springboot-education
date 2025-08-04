@@ -15,10 +15,8 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
 
 import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.List;
 
 @Getter

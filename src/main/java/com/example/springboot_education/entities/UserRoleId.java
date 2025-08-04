@@ -3,16 +3,19 @@ package com.example.springboot_education.entities;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import org.hibernate.Hibernate;
 
 import java.io.Serializable;
 import java.util.Objects;
 
-@Getter
-@Setter
 @Embeddable
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserRoleId implements Serializable {
     private static final long serialVersionUID = 552538177286132061L;
     @NotNull
@@ -22,6 +25,12 @@ public class UserRoleId implements Serializable {
     @NotNull
     @Column(name = "role_id", nullable = false)
     private Long roleId;
+
+
+    // public UserRoleId(Long userId, Long roleId) {
+    // this.userId = userId;
+    // this.roleId = roleId;
+    // }
 
     @Override
     public boolean equals(Object o) {

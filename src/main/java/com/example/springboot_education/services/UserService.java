@@ -7,21 +7,27 @@ import com.example.springboot_education.dtos.roleDTOs.RoleResponseDto;
 import com.example.springboot_education.dtos.usersDTOs.CreateUserRequestDto;
 import com.example.springboot_education.dtos.usersDTOs.UpdateUserRequestDto;
 import com.example.springboot_education.dtos.usersDTOs.UserResponseDto;
+import com.example.springboot_education.entities.UserRole;
+import com.example.springboot_education.entities.UserRoleId;
 import com.example.springboot_education.entities.Users;
 import com.example.springboot_education.exceptions.HttpException;
+import com.example.springboot_education.repositories.RoleJpaRepository;
 import com.example.springboot_education.repositories.UsersJpaRepository;
+
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @Service
 public class UserService {
 
     private final UsersJpaRepository userJpaRepository;
 
-    public UserService(UsersJpaRepository userJpaRepository) {
-        this.userJpaRepository = userJpaRepository;
-    }
+    private final RoleJpaRepository roleJpaRepository;
+
+
 
     // Convert Users entity to UserResponseDto
     private UserResponseDto convertToDto(Users user) {
@@ -49,22 +55,43 @@ public class UserService {
     }
 
     // Tạo user mới
-    public UserResponseDto createUser(CreateUserRequestDto dto) {
-
-        // Check if email already exists
-        if (this.userJpaRepository.existsByEmail(dto.getEmail())) {
-            throw new HttpException("Email already exists: " + dto.getEmail(), HttpStatus.CONFLICT);
-        }
-
-        Users user = new Users();
-        user.setUsername(dto.getUsername());
-        user.setEmail(dto.getEmail());
-        user.setFullName(dto.getFullName());
-        user.setImageUrl(dto.getImageUrl());
-        user.setPassword(dto.getPassword());
-        Users savedUser = userJpaRepository.save(user);
-        return convertToDto(savedUser);
+  public UserResponseDto createUser(CreateUserRequestDto dto) {
+    if (this.userJpaRepository.existsByEmail(dto.getEmail())) {
+        throw new HttpException("Email already exists: " + dto.getEmail(), HttpStatus.CONFLICT);
     }
+
+    Users user = new Users();
+    user.setUsername(dto.getUsername());
+    user.setEmail(dto.getEmail());
+    user.setFullName(dto.getFullName());
+    user.setImageUrl(dto.getImageUrl());
+    user.setPassword(dto.getPassword());
+
+    if (user.getUserRoles() == null) {
+        user.setUserRoles(new java.util.ArrayList<>());
+    }
+
+    if (dto.getRoles() != null && !dto.getRoles().isEmpty()) {
+        for (Long roleId : dto.getRoles()) {
+            var role = roleJpaRepository.findById(roleId)
+                    .orElseThrow(() -> new HttpException("Role not found with id: " + roleId, HttpStatus.NOT_FOUND));
+
+            var userRole = new UserRole();
+            userRole.setUser(user);
+            userRole.setRole(role);
+
+            var userRoleId = new UserRoleId();
+            userRoleId.setUserId(user.getId()); 
+            userRoleId.setRoleId(role.getId());
+            userRole.setId(userRoleId);
+
+            user.getUserRoles().add(userRole); 
+        }
+    }
+
+    Users savedUser = userJpaRepository.save(user); 
+    return convertToDto(savedUser);
+}
 
     // public UserResponseDto createUser(CreateUserRequestDto createUserRequestDto)
     // {
@@ -113,4 +140,6 @@ public class UserService {
         
         userJpaRepository.deleteById(id);
     }
+
+
 }

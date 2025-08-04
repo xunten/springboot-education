@@ -1,4 +1,5 @@
 package com.example.springboot_education.dtos.usersDTOs;
+import java.security.Timestamp;
 import java.util.List;
 
 import com.example.springboot_education.dtos.roleDTOs.RoleResponseDto;
@@ -25,4 +26,6 @@ public class UserResponseDto {
     
     private String email;
     private List<RoleResponseDto> roles;
+    private Timestamp createdAt;
+    private Timestamp updatedAt;
 }

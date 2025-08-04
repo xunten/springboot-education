@@ -3,6 +3,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
 import com.example.springboot_education.entities.Users;
 import org.springframework.stereotype.Repository;
 
@@ -12,17 +15,23 @@ public interface UsersJpaRepository extends JpaRepository<Users, Long> {
 
     Optional<Users> findByEmail(String email);
 
-    Optional<Users> findByEmailWithRoles(String email);
+      @Query("SELECT u FROM Users u LEFT JOIN FETCH  u.userRoles WHERE u.email = :email")
+    Optional<Users> findByEmailWithRoles(@Param("email") String email);
 
-    Optional<Users> findById(String id);
+    Optional<Users> findById(Long id);
 
-    boolean existsById(String id);
+    boolean existsById(Long id);
 
     Users save(Users user);
 
-    void deleteById(String id);
+    void deleteById(Long id);
 
-    List<Users> findAllUsersWithRoles();
+@Query("SELECT DISTINCT u FROM Users u LEFT JOIN FETCH u.userRoles")
+List<Users> findAllUsersWithRoles();
 
-    List<Users> findByIdIn(List<String> ids);
+    @Query("SELECT u FROM Users u LEFT JOIN FETCH u.roles WHERE u.username = :username")
+    Optional<Users> findByUsername(String username);
+
+
+    List<Users> findByIdIn(List<Long> ids);
 }
