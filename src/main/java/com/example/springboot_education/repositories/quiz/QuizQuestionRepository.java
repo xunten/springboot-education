@@ -1,4 +1,4 @@
-package com.example.springboot_education.repositories;
+package com.example.springboot_education.repositories.quiz;
 
 import com.example.springboot_education.entities.QuizQuestion;
 import org.springframework.data.jpa.repository.JpaRepository;

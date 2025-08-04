@@ -10,5 +10,6 @@ public class QuizSubmitReqDTO {
     private Long studentId;
     private Instant startAt;
     private Instant endAt;
+    private Instant submittedAt;
     private Map<Integer, String> answers;
 }

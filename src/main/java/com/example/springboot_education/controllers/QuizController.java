@@ -1,10 +1,7 @@
 package com.example.springboot_education.controllers;
 
 
-import com.example.springboot_education.dtos.quiz.QuizRequestDTO;
-import com.example.springboot_education.dtos.quiz.QuizResponseDTO;
-import com.example.springboot_education.dtos.quiz.QuizSubmitReqDTO;
-import com.example.springboot_education.dtos.quiz.QuizSubmitResDTO;
+import com.example.springboot_education.dtos.quiz.*;
 import com.example.springboot_education.services.quiz.QuizService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +28,10 @@ public class QuizController {
     @GetMapping
     public ResponseEntity<List<QuizResponseDTO>> getAllQuizzes() {
         return ResponseEntity.ok(quizService.getAllQuizzes());
+    }
+    @GetMapping("/{quizId}/submissions")
+    public List<QuizReportDTO> getQuizReport(@PathVariable Integer quizId) {
+        return quizService.getReportByQuizId(quizId);
     }
     @PostMapping("/submission")
     public QuizSubmitResDTO submitQuiz(@RequestBody QuizSubmitReqDTO dto) {

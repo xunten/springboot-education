@@ -7,7 +7,7 @@ import com.example.springboot_education.dtos.quiz.QuizResponseDTO;
 import com.example.springboot_education.entities.*;
 import com.example.springboot_education.repositories.ClassRepository;
 import com.example.springboot_education.repositories.ClassUserRepository;
-import com.example.springboot_education.repositories.QuizSubmissionRepository;
+import com.example.springboot_education.repositories.quiz.QuizSubmissionRepository;
 import com.example.springboot_education.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

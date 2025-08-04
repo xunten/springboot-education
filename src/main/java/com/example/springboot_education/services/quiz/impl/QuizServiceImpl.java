@@ -3,7 +3,8 @@ package com.example.springboot_education.services.quiz.impl;
 import com.example.springboot_education.dtos.quiz.*;
 import com.example.springboot_education.entities.*;
 import com.example.springboot_education.mapper.QuizMapper;
-import com.example.springboot_education.repositories.*;
+import com.example.springboot_education.repositories.UserRepository;
+import com.example.springboot_education.repositories.quiz.*;
 import com.example.springboot_education.services.quiz.QuizService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +18,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class QuizServiceImpl implements QuizService {
-
+    private final QuizReportRepository quizReportRepository;
     private final QuizRepository quizRepository;
     private final QuizQuestionRepository questionRepository;
     private final QuizOptionRepository optionRepository;
@@ -93,12 +94,12 @@ public class QuizServiceImpl implements QuizService {
             }
         }
 
-        // Lưu kết quả nộp bài
         QuizSubmission submission = new QuizSubmission();
         submission.setQuiz(quiz);
         submission.setStudent(student);
         submission.setStartAt(request.getStartAt());
         submission.setEndAt(request.getEndAt());
+        submission.setSubmittedAt(request.getSubmittedAt());
         submission.setScore(totalScore);
         submission.setGradedAt(Instant.now());
 
@@ -124,6 +125,11 @@ public class QuizServiceImpl implements QuizService {
         res.setEndAt(saved.getEndAt());
         res.setGradedAt(saved.getGradedAt());
         return res;
+    }
+
+    @Override
+    public List<QuizReportDTO> getReportByQuizId(Integer quizId) {
+        return quizReportRepository.getQuizSubmissionReport(quizId);
     }
 
 }
