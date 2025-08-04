@@ -1,63 +1,58 @@
 package com.example.springboot_education.entities;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import java.math.BigDecimal;
-import java.time.Instant;
+import java.sql.Timestamp;
+import java.util.Date;
 
-@Getter
-@Setter
 @Entity
 @Table(name = "assignments")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Assignment {
+    
     @Id
-    @Column(name = "id", nullable = false)
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Size(max = 255)
-    @NotNull
-    @Column(name = "title", nullable = false)
+    private Long classId;
+
     private String title;
 
-    @Lob
-    @Column(name = "description")
+    @Column(length = 1000)
     private String description;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "class_id", nullable = false)
-    private Class classField;
+    @Temporal(TemporalType.DATE)
+    private Date dueDate;
 
-    @NotNull
-    @Column(name = "due_date", nullable = false)
-    private Instant dueDate;
-
-    @NotNull
-    @Column(name = "max_score", nullable = false, precision = 5, scale = 2)
     private BigDecimal maxScore;
 
-    @ColumnDefault("CURRENT_TIMESTAMP")
-    @Column(name = "created_at")
-    private Instant createdAt;
-
-    @Size(max = 500)
-    @Column(name = "file_path", length = 500)
     private String filePath;
 
-    @Size(max = 50)
-    @Column(name = "file_type", length = 50)
     private String fileType;
 
-    @ColumnDefault("CURRENT_TIMESTAMP")
-    @Column(name = "updated_at")
-    private Instant updatedAt;
+    private Timestamp createdAt;
 
+    private Timestamp updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = new Timestamp(System.currentTimeMillis());
+        updatedAt = createdAt;
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = new Timestamp(System.currentTimeMillis());
+    }
 }
