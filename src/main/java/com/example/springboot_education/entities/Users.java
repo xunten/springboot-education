@@ -1,38 +1,55 @@
 package com.example.springboot_education.entities;
 
-import java.sql.Timestamp;
 import jakarta.persistence.*;
-import lombok.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.Instant;
 
 @Getter
 @Setter
 @Entity
-@NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "users")
-
-public class Users {
-    public enum Role {
-    ADMIN,
-    STUDENT,
-    TEACHER
-}
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Long id;
+
+    @Size(max = 50)
+    @Column(name = "username", length = 50)
     private String username;
+
+    @Size(max = 255)
+    @NotNull
+    @Column(name = "password", nullable = false)
     private String password;
-    private String full_name;
-    private String email; 
-     @Enumerated(EnumType.STRING)
-    private Role role;
-    private Timestamp created_at;
-    
-    public Users(String username, String password, String full_name, String email, Role role) {
-        this.username = username;
-        this.password = password;
-        this.full_name = full_name;
-        this.email = email;
-        this.role = role;
-        this.created_at = new Timestamp(System.currentTimeMillis());
-    }}
+
+    @Size(max = 100)
+    @Column(name = "full_name", length = 100)
+    private String fullName;
+
+    @Size(max = 100)
+    @NotNull
+    @Column(name = "email", nullable = false, length = 100)
+    private String email;
+
+    @Size(max = 255)
+    @Column(name = "image_url")
+    private String imageUrl;
+
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Instant createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private Instant updatedAt;
+
+
+}
