@@ -1,7 +1,6 @@
 package com.example.springboot_education.dtos.usersDTOs;
 
-import com.example.springboot_education.entities.Users.Role;
-
+import com.example.springboot_education.entities.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;

@@ -1,7 +1,6 @@
 package com.example.springboot_education.dtos.usersDTOs;
 
-import com.example.springboot_education.entities.Users;
-
+import com.example.springboot_education.entities.Role;
 import lombok.*;
 
 
@@ -14,5 +13,5 @@ public class UserResponseDto {
     private String username;
     private String full_name;
     private String email;
-     private Users.Role role;
+     private Role role;
 }

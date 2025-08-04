@@ -15,7 +15,7 @@ import java.time.Instant;
 @Setter
 @Entity
 @Table(name = "classes")
-public class Class {
+public class ClassEntity {
     @Id
     @Column(name = "id", nullable = false)
     private Integer id;

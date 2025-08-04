@@ -21,7 +21,7 @@ public class ClassUser {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "class_id", nullable = false)
-    private Class classField;
+    private ClassEntity classField;
 
     @MapsId("studentId")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

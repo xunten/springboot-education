@@ -8,6 +8,7 @@ import org.hibernate.annotations.ColumnDefault;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.List;
 
 @Getter
 @Setter
@@ -15,6 +16,7 @@ import java.time.Instant;
 @Table(name = "quiz_questions")
 public class QuizQuestion {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
 
@@ -28,10 +30,6 @@ public class QuizQuestion {
     @Column(name = "question_text", nullable = false)
     private String questionText;
 
-    @ColumnDefault("'single_choice'")
-    @Lob
-    @Column(name = "question_type")
-    private String questionType;
 
     @Column(name = "correct_option")
     private Character correctOption;
@@ -48,4 +46,6 @@ public class QuizQuestion {
     @Column(name = "updated_at")
     private Instant updatedAt;
 
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<QuizOption> options;
 }

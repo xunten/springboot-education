@@ -11,6 +11,7 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -18,6 +19,7 @@ import java.time.LocalDate;
 @Table(name = "quizzes")
 public class Quiz {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
 
@@ -42,7 +44,7 @@ public class Quiz {
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.SET_NULL)
     @JoinColumn(name = "class_id")
-    private Class classField;
+    private ClassEntity classField;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by")
@@ -63,5 +65,6 @@ public class Quiz {
     @Size(max = 100)
     @Column(name = "subject", length = 100)
     private String subject;
-
+    @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<QuizQuestion> questions;
 }
