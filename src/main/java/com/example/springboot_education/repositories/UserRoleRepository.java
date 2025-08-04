@@ -10,7 +10,7 @@ public interface UserRoleRepository  extends JpaRepository<UserRole, UserRoleId>
 
     void deleteById(UserRoleId userRoleId);
 
-    void saveAllUsersRoles(Iterable<UserRole> userRoles);
+    // void saveAllUsersRoles(Iterable<UserRole> userRoles);
 
-    UserRole save(UserRole userRole);
+    // UserRole save(UserRole userRole);
 }

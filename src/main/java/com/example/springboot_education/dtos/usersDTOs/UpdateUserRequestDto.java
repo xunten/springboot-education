@@ -1,4 +1,6 @@
 package com.example.springboot_education.dtos.usersDTOs;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonAlias;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -28,6 +30,8 @@ public class UpdateUserRequestDto {
     
     @JsonAlias("image_url")
     private String imageUrl;
+
+        private List<Long> roles; 
     
     @NotBlank(message = "Password is required")
     @Size(min = 6, max = 100, message = "Password must be between 6 and 100 characters")
