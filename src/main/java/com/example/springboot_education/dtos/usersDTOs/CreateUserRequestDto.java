@@ -1,35 +1,37 @@
 package com.example.springboot_education.dtos.usersDTOs;
 
-import com.example.springboot_education.entities.Users.Role;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.*;
+import lombok.*;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.util.List;
 
 @Data
 @Builder
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateUserRequestDto {
 
-    @NotBlank(message = "Username is required")
+    @NotBlank(message = "Name is required")
     private String username;
 
     @NotBlank(message = "Full name is required")
     private String full_name;
 
     @NotBlank(message = "Email is required")
-    @Email(message = "Email is invalid")
+    @Email(message = "Email should be valid")
     private String email;
 
+    @JsonProperty("image_url")
+    private String image_url;
+
     @NotBlank(message = "Password is required")
+    @Size(min = 6, max = 100, message = "Password must be between 6 and 100 characters")
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{6,100}$", message = "Password must contain at least one uppercase letter, one lowercase letter, and one digit")
     private String password;
 
-    @NotBlank(message = "Confirm password is required")
-private String confirmPassword;
-
-    private Role role;
+    @NotEmpty(message = "At least one role is required")
+    private List<Long> role_id;
 }

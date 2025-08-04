@@ -19,10 +19,11 @@ public class UserController {
     public UserController(UserService userService) {
         this.userService = userService;
     }
-@GetMapping("")
-public List<UserResponseDto> getAllUsers() {
-    return userService.getAllUsers();
-}
+
+    @GetMapping("")
+    public List<UserResponseDto> getAllUsers() {
+        return userService.getUsers();
+    }
    
     // GET USER BY ID
     @GetMapping("/{id}")
