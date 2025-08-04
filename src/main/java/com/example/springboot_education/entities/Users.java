@@ -7,10 +7,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
+
+import org.hibernate.annotations.ColumnDefault;
 
 @Getter
 @Setter
@@ -45,11 +45,11 @@ public class Users {
     private String imageUrl;
 
     // @ColumnDefault("CURRENT_TIMESTAMP")
-    @Column(name = "created_at")
+    // @Column(name = "created_at")
     private Timestamp createdAt;
 
     // @ColumnDefault("CURRENT_TIMESTAMP")
-    @Column(name = "updated_at")
+    // @Column(name = "updated_at")
     private Timestamp updatedAt;
 
     // @NotNull
@@ -57,17 +57,8 @@ public class Users {
     // @Column(name = "role", nullable = false)
     // private String role;
 
-@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-private List<UserRole> userRoles = new ArrayList<>();
-
- @ManyToMany(fetch = FetchType.LAZY)
-@JoinTable(
-    name = "user_roles",
-    joinColumns = @JoinColumn(name = "user_id"),
-    inverseJoinColumns = @JoinColumn(name = "role_id")
-)
-private Set<Role> roles = new HashSet<>();
-
+@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+private Set<UserRole> userRoles = new HashSet<>();
 
     @PrePersist
     protected void onCreate() {

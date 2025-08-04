@@ -1,10 +1,8 @@
 package com.example.springboot_education.dtos.usersDTOs;
 
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.List;
 
-import com.example.springboot_education.entities.Role;
 // import com.example.springboot_education.entities.Users;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Email;
@@ -13,6 +11,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,6 +20,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Setter
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor  
 public class CreateUserRequestDto {

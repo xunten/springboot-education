@@ -1,25 +1,23 @@
 package com.example.springboot_education.dtos.roleDTOs;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.sql.Timestamp;
 
-/**
- * DTO for representing user information in API responses.
- * Contains user basic information and associated roles.
- */
 @Data
 @Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class RoleResponseDto implements Serializable {
     @Serial
-        private static final long serialVersionUID = 1L;
-    
+    private static final long serialVersionUID = 1L;
+
     private Long id;
     private String name;
+    private Timestamp createdAt;
+    private Timestamp updatedAt;
 
     public RoleResponseDto(Long id, String name) {
         this.id = id;

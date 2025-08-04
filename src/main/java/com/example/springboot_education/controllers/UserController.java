@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -22,7 +23,7 @@ public class UserController {
 
     @GetMapping()
     public List<UserResponseDto> getAllUsers() {
-        return userService.getAllUsers();
+        return userService.getUsers();
     }
 
     // GET USER BY ID
@@ -44,8 +45,10 @@ public class UserController {
     }
 
     // DELETE USER BY ID
-    @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable("id") Long id) {
-        this.userService.deleteUser(id);
-    }
+  @DeleteMapping("/{id}")
+public ResponseEntity<Void> deleteUser(@PathVariable("id") Long id) {
+    userService.deleteUser(id);
+    return ResponseEntity.noContent().build(); 
+}
+
 }

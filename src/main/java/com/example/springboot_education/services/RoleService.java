@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.springboot_education.dtos.roleDTOs.UpdateRoleRequestDto;
 import com.example.springboot_education.dtos.roleDTOs.CreateRoleRequestDto;
+import com.example.springboot_education.dtos.roleDTOs.RoleResponseDto;
 import com.example.springboot_education.entities.Role;
 import com.example.springboot_education.repositories.RoleJpaRepository;
 import com.example.springboot_education.repositories.UserRoleRepository;
@@ -40,6 +41,15 @@ public class RoleService {
         this.userRepository = userRepository;
         this.userRoleRepository = userRoleRepository;
         this.eventPublisher = eventPublisher;
+    }
+
+       public static RoleResponseDto convertToDto(Role role) {
+        return RoleResponseDto.builder()
+                .id(role.getId())
+                .name(role.getName())
+                .createdAt(role.getCreatedAt())   
+                .updatedAt(role.getUpdatedAt())   
+                .build();
     }
 
     public Role create(CreateRoleRequestDto data) {
@@ -83,12 +93,6 @@ public class RoleService {
         return this.roleRepository.findAll();
     }
 
-    // Transactional methods for adding and removing users from roles
-    // Only allow adding/removing users if the role exists and all userIds are valid
-    // If any userId is invalid, throw an exception
-    // If the role does not exist, throw an exception
-    // If the user is already assigned to the role, do not add them again
-    // If the user is not assigned to the role, do not remove them
     @Transactional
     public void addUsersToRole(Long roleId, List<Long> userIds) {
 

@@ -7,11 +7,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import org.hibernate.Hibernate;
-
 import java.io.Serializable;
 import java.util.Objects;
 
+import org.hibernate.Hibernate;
 @Embeddable
 @Data
 @NoArgsConstructor
@@ -45,5 +44,8 @@ public class UserRoleId implements Serializable {
     public int hashCode() {
         return Objects.hash(roleId, userId);
     }
+
+    // private Long userId;
+    // private Long roleId;
 
 }

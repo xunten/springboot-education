@@ -1,8 +1,10 @@
 package com.example.springboot_education.repositories;
+
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -11,27 +13,28 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UsersJpaRepository extends JpaRepository<Users, Long> {
-    boolean existsByEmail(String email);
+  boolean existsByEmail(String email);
 
-    Optional<Users> findByEmail(String email);
+  boolean existsByUsername(String username);
 
-      @Query("SELECT u FROM Users u LEFT JOIN FETCH  u.userRoles WHERE u.email = :email")
-    Optional<Users> findByEmailWithRoles(@Param("email") String email);
+  Optional<Users> findByEmail(String email);
 
-    Optional<Users> findById(Long id);
+  @Query("SELECT u FROM Users u LEFT JOIN FETCH  u.userRoles WHERE u.email = :email")
+  Optional<Users> findByEmailWithRoles(@Param("email") String email);
 
-    boolean existsById(Long id);
+  Optional<Users> findById(Long id);
 
-    Users save(Users user);
+  boolean existsById(Long id);
 
-    void deleteById(Long id);
+  Users save(Users user);
 
-@Query("SELECT DISTINCT u FROM Users u LEFT JOIN FETCH u.userRoles")
-List<Users> findAllUsersWithRoles();
+  void deleteById(Long id);
 
-    @Query("SELECT u FROM Users u LEFT JOIN FETCH u.roles WHERE u.username = :username")
-    Optional<Users> findByUsername(String username);
+  @Query("SELECT DISTINCT u FROM Users u LEFT JOIN FETCH u.userRoles")
+  List<Users> findAllUsersWithRoles();
 
+  @Query("SELECT u FROM Users u LEFT JOIN FETCH u.roles WHERE u.username = :username")
+  Optional<Users> findByUsername(String username);
 
-    List<Users> findByIdIn(List<Long> ids);
+  List<Users> findByIdIn(List<Long> ids);
 }
