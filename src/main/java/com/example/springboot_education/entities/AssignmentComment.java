@@ -2,19 +2,23 @@ package com.example.springboot_education.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.List;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "assignment_comments")
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class AssignmentComment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,12 +42,19 @@ public class AssignmentComment {
     @Column(name = "comment", nullable = false)
     private String comment;
 
-    @CreationTimestamp
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private Instant createdAt;
+    private Timestamp createdAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = new Timestamp(System.currentTimeMillis());
+    }
 
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "parent_id", referencedColumnName = "id") // Có thể thêm columnDefinition nếu cần
     private AssignmentComment parent;
+
+//    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
+//    private List<AssignmentComment> replies;
+
 }
