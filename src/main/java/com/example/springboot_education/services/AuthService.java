@@ -1,6 +1,5 @@
 package com.example.springboot_education.services;
 
-
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -19,16 +18,16 @@ public class AuthService {
     private final UsersJpaRepository userJpaRepository;
 
     public LoginResponseDto login(LoginRequestDto request) throws Exception {
-        // Find the user by email (username)
-        Users user = this.userJpaRepository.findByUsername(request.getUsername())
+        // ✅ Dùng findByUsernameWithRoles để load đầy đủ Roles
+        Users user = this.userJpaRepository.findByUsernameWithRoles(request.getUsername())
                 .orElseThrow(() -> new HttpException("Invalid username or password", HttpStatus.UNAUTHORIZED));
 
-        // Verify password
+        // Verify password (cách đơn giản, production thì nên mã hóa)
         if (!request.getPassword().equals(user.getPassword())) {
             throw new HttpException("Invalid username or password", HttpStatus.UNAUTHORIZED);
         }
 
-        // Generate a new access token (with full data + roles)
+        // Generate a new access token (include roles)
         String accessToken = jwtService.generateAccessToken(user);
 
         return LoginResponseDto.builder()

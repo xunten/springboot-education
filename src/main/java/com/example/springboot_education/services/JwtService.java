@@ -2,8 +2,10 @@ package com.example.springboot_education.services;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import javax.crypto.SecretKey;
 
@@ -16,7 +18,6 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
-
 
 @Service
 @RequiredArgsConstructor
@@ -44,33 +45,15 @@ public class JwtService {
     public String generateAccessToken(Users user) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("id", user.getId());
-        claims.put("type", "access_token"); // Token type identifier
+        claims.put("type", "access_token");
 
-        // Add user roles to access token
-        /*
-         * Trường hợp KHÔNG nên đưa roles vào JWT:
-         * Bảo mật cao: Roles có thể thay đổi thường xuyên, nếu để trong JWT thì phải
-         * chờ token hết hạn mới cập nhật được.
-         * Roles phức tạp: Nếu roles có nhiều thông tin chi tiết, JWT sẽ trở nên lớn.
-         * Quản lý tập trung: Muốn kiểm soát quyền truy cập real-time từ database.
-         * Trường hợp NÊN đưa roles vào JWT:
-         * Performance: Tránh query database mỗi request để lấy roles.
-         * Stateless: Hoàn toàn không phụ thuộc vào database cho việc xác thực.
-         * Microservices: Các service khác có thể đọc roles từ JWT mà không cần gọi user
-         * service.
-         */
-        // List<Map<String, Object>> roles = user.getRoles().stream()
-        // .map(role -> {
-        // Map<String, Object> roleMap = new HashMap<>();
-        // roleMap.put("id", role.getId());
-        // roleMap.put("name", role.getName());
-        // return roleMap;
-        // })
-        // .collect(Collectors.toList());
+        // Embed roles into token
+        List<String> roles = user.getUserRoles().stream()
+                .map(userRole -> userRole.getRole().getName())
+                .collect(Collectors.toList());
+        claims.put("roles", roles);
 
-        // claims.put("roles", roles);
-
-        long jwtExpiration = 86400000;
+        long jwtExpiration = 86400000; // 24h
         return createToken(claims, user.getUsername(), jwtExpiration);
     }
 
@@ -99,6 +82,11 @@ public class JwtService {
         return extractClaim(token, Claims::getExpiration);
     }
 
+    public List<String> extractRoles(String token) {
+        Claims claims = extractAllClaims(token);
+        return claims.get("roles", List.class);
+    }
+
     private Boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
@@ -108,6 +96,6 @@ public class JwtService {
         final String tokenType = extractTokenType(token);
         return (username.equals(userDetails.getUsername()))
                 && !isTokenExpired(token)
-                && "access_token".equals(tokenType); // Only access tokens for authentication
+                && "access_token".equals(tokenType);
     }
 }
