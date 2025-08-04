@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 public class AttendanceResponseDTO {
     private Integer id;
-    private Integer studentId;
+    private Long studentId;
     private Integer scheduleId;
     private Timestamp markedAt;
     private String status;

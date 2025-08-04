@@ -23,7 +23,7 @@ public class Attendance {
     private Integer id;
 
     @Column(name = "student_id", nullable = false)
-    private Integer studentId;
+    private Long studentId;
 
     @Column(name = "schedule_id", nullable = false)
     private Integer scheduleId;

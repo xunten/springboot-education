@@ -1,8 +1,16 @@
 package com.example.springboot_education.entities;
 
-import jakarta.persistence.*;
-import lombok.*;
 import java.sql.Timestamp;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "activity_logs")
@@ -12,10 +20,10 @@ import java.sql.Timestamp;
 public class ActivityLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(name = "user_id")
-    private Integer userId;
+    private Long userId;
 
     @Column(name = "action_type")
     private String actionType;

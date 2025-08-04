@@ -1,12 +1,13 @@
 package com.example.springboot_education.dtos.activitylogs;
 
-import lombok.Data;
 import java.sql.Timestamp;
+
+import lombok.Data;
 
 @Data
 public class ActivityLogResponseDTO {
-    private Integer id;
-    private Integer userId;
+    private Long id;
+    private Long userId;
     private String actionType;
     private String targetTable;
     private Integer targetId;

@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class AttendanceCreateDTO {
     private Integer scheduleId;
-    private Integer studentId;
+    private Long studentId;
     private String status;  // e.g., "Present", "Absent", "Late"
 }

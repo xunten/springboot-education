@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 public class ClassScheduleResponseDTO {
     private Integer id;
-    private Integer classId;
+    private Long classId;
     private Integer dayOfWeek;
     private Time startTime;
     private Time endTime;

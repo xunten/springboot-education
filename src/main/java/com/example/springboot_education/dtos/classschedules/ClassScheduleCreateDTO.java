@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 public class ClassScheduleCreateDTO {
-    private Integer classId;
+    private Long classId;
     private Integer dayOfWeek;
     private Time startTime;
     private Time endTime;

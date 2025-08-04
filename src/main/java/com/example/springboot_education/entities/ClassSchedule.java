@@ -24,7 +24,7 @@ public class ClassSchedule {
     private Integer id;
 
     @Column(name = "class_id", nullable = false)
-    private Integer classId;
+    private Long classId;
 
     @Column(name = "day_of_week", nullable = false)
     private Integer dayOfWeek;
