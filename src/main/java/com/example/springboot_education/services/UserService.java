@@ -1,8 +1,11 @@
 package com.example.springboot_education.services;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-// import org.springframework.web.server.ResponseStatusException;
 
 import com.example.springboot_education.dtos.roleDTOs.RoleResponseDto;
 import com.example.springboot_education.dtos.usersDTOs.CreateUserRequestDto;
@@ -13,16 +16,10 @@ import com.example.springboot_education.entities.UserRoleId;
 import com.example.springboot_education.entities.Users;
 import com.example.springboot_education.exceptions.HttpException;
 import com.example.springboot_education.repositories.RoleJpaRepository;
-// import com.example.springboot_education.repositories.UserRoleRepository;
 import com.example.springboot_education.repositories.UsersJpaRepository;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-
-// import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -36,9 +33,14 @@ public class UserService {
 
     private UserResponseDto convertToDto(Users user) {
         List<RoleResponseDto> roles = user.getUserRoles().stream()
-                .map(userRole -> new RoleResponseDto(userRole.getRole().getId(), userRole.getRole().getName(),
-                        userRole.getRole().getCreatedAt(), userRole.getRole().getUpdatedAt()))
-                .collect(Collectors.toList());
+        .map(userRole -> RoleResponseDto.builder()
+                .id(userRole.getRole().getId())
+                .name(userRole.getRole().getName())
+                .createdAt(userRole.getRole().getCreatedAt())
+                .updatedAt(userRole.getRole().getUpdatedAt())
+                .build())
+        .collect(Collectors.toList());
+
 
         return UserResponseDto.builder()
                 .id(user.getId())

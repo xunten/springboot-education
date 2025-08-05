@@ -1,26 +1,25 @@
+
 package com.example.springboot_education.dtos.roleDTOs;
 
-import lombok.*;
-
-import java.io.Serial;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.List;
 
-@Data
+import com.example.springboot_education.dtos.usersDTOs.UserSummaryDto;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 @Builder
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class RoleResponseDto implements Serializable {
-    @Serial
-    private static final long serialVersionUID = 1L;
-
     private Long id;
     private String name;
     private Timestamp createdAt;
     private Timestamp updatedAt;
-
-    public RoleResponseDto(Long id, String name) {
-        this.id = id;
-        this.name = name;
-    }
+    private List<UserSummaryDto> users; // <- Đừng quên field này
 }

@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.springboot_education.dtos.roleDTOs.UpdateRoleRequestDto;
 import com.example.springboot_education.dtos.roleDTOs.CreateRoleRequestDto;
 import com.example.springboot_education.dtos.roleDTOs.RoleResponseDto;
+import com.example.springboot_education.dtos.usersDTOs.UserSummaryDto;
 import com.example.springboot_education.entities.Role;
 import com.example.springboot_education.repositories.RoleJpaRepository;
 import com.example.springboot_education.repositories.UserRoleRepository;
@@ -22,7 +23,6 @@ import com.example.springboot_education.entities.UserRoleId;
 import com.example.springboot_education.exceptions.HttpException;
 import com.example.springboot_education.events.RoleAssignedEvent;
 import com.example.springboot_education.events.RoleUnassignedEvent;
-
 
 
 @Service
@@ -43,21 +43,30 @@ public class RoleService {
         this.eventPublisher = eventPublisher;
     }
 
-       public static RoleResponseDto convertToDto(Role role) {
-        return RoleResponseDto.builder()
-                .id(role.getId())
-                .name(role.getName())
-                .createdAt(role.getCreatedAt())   
-                .updatedAt(role.getUpdatedAt())   
-                .build();
-    }
+   public static RoleResponseDto toRoleDto(Role role) {
+    List<UserSummaryDto> users = role.getUserRoles().stream()
+            .map(userRole -> {
+                Users user = userRole.getUser();
+                return UserSummaryDto.builder()
+                        .id(user.getId())
+                        .username(user.getUsername())
+                        .email(user.getEmail())
+                        .build();
+            })
+            .collect(Collectors.toList());
+
+    return RoleResponseDto.builder()
+            .id(role.getId())
+            .name(role.getName())
+            .createdAt(role.getCreatedAt())
+            .updatedAt(role.getUpdatedAt())
+            .users(users)
+            .build();
+}
 
     public Role create(CreateRoleRequestDto data) {
         Role role = new Role();
-        // role.setCode(data.getCode());
         role.setName(data.getName());
-        // role.setDescription(data.getDescription());
-
         return this.roleRepository.save(role);
     }
 
@@ -65,21 +74,13 @@ public class RoleService {
         Role existingRole = this.roleRepository.findById(id)
                 .orElseThrow(() -> new HttpException("Role not found with id: " + id, HttpStatus.NOT_FOUND));
 
-        // Validate that at least one field is provided
         if (!role.hasAnyField()) {
             throw new HttpException("At least one field must be provided for update", HttpStatus.BAD_REQUEST);
         }
 
-        // Only update fields that are present in the request
-        // if (role.getCode() != null) {
-        //     existingRole.setCode(role.getCode());
-        // }
         if (role.getName() != null) {
             existingRole.setName(role.getName());
         }
-        // if (role.getDescription() != null) {
-        //     existingRole.setDescription(role.getDescription());
-        // }
 
         return this.roleRepository.save(existingRole);
     }
@@ -95,8 +96,6 @@ public class RoleService {
 
     @Transactional
     public void addUsersToRole(Long roleId, List<Long> userIds) {
-
-        // Check if all userIds exist
         List<Users> users = userRepository.findByIdIn(userIds);
         Set<Long> foundUserIds = users.stream().map(Users::getId).collect(Collectors.toSet());
 
@@ -106,43 +105,33 @@ public class RoleService {
             }
         }
 
-        // Check the User-Role link exists in users_roles
         Role role = this.roleRepository.findById(roleId)
                 .orElseThrow(() -> new HttpException("Role not found with id: " + roleId, HttpStatus.NOT_FOUND));
+
         for (Long userId : userIds) {
-            UserRoleId userRoleId = new UserRoleId();
-            userRoleId.setUserId(userId);
-            userRoleId.setRoleId(roleId);
+            UserRoleId userRoleId = new UserRoleId(userId, roleId);
             boolean exists = userRoleRepository.existsById(userRoleId);
 
-            if (exists) {
-                // User is already assigned to the role
-                continue;
-            }
+            if (exists) continue;
 
-            // If we reach here, the user is not assigned to the role
             UserRole userRole = new UserRole();
             userRole.setId(userRoleId);
-            // Set User and Role objects to avoid null one-to-one property error
             Users user = users.stream().filter(u -> u.getId().equals(userId)).findFirst().orElse(null);
             userRole.setUser(user);
             userRole.setRole(role);
             userRoleRepository.save(userRole);
 
-            // Phát sự kiện RoleAssignedEvent
             eventPublisher.publishEvent(new RoleAssignedEvent(user.getId(), roleId));
         }
     }
 
     public void removeUsersFromRole(Long roleId, List<Long> userIds) {
-        // Check if a role exists
         Role role = this.roleRepository.findById(roleId).orElse(null);
 
         if (role == null) {
             throw new HttpException("Role not found with id: " + roleId, HttpStatus.BAD_REQUEST);
         }
 
-        // 2. Check if all userIds exist
         List<Users> users = userRepository.findByIdIn(userIds);
         Set<Long> foundUserIds = users.stream().map(Users::getId).collect(Collectors.toSet());
 
@@ -152,11 +141,9 @@ public class RoleService {
             }
         }
 
-        // 4. Now Safe: delete the UserRoleRepository links
         for (Long userId : userIds) {
             UserRoleId userRoleId = new UserRoleId(userId, roleId);
             userRoleRepository.deleteById(userRoleId);
-            // Phát sự kiện RoleUnassignedEvent
             eventPublisher.publishEvent(new RoleUnassignedEvent(userId, roleId));
         }
     }
