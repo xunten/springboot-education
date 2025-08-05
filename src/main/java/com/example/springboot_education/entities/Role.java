@@ -1,5 +1,8 @@
 package com.example.springboot_education.entities;
 
+import java.sql.Timestamp;
+import java.util.List;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -15,9 +18,6 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.sql.Timestamp;
-import java.util.List;
 
 @Getter
 @Setter

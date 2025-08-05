@@ -9,20 +9,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.springboot_education.dtos.roleDTOs.UpdateRoleRequestDto;
 import com.example.springboot_education.dtos.roleDTOs.CreateRoleRequestDto;
 import com.example.springboot_education.dtos.roleDTOs.RoleResponseDto;
+import com.example.springboot_education.dtos.roleDTOs.UpdateRoleRequestDto;
 import com.example.springboot_education.dtos.usersDTOs.UserSummaryDto;
 import com.example.springboot_education.entities.Role;
+import com.example.springboot_education.entities.UserRole;
+import com.example.springboot_education.entities.UserRoleId;
+import com.example.springboot_education.entities.Users;
+import com.example.springboot_education.events.RoleAssignedEvent;
+import com.example.springboot_education.events.RoleUnassignedEvent;
+import com.example.springboot_education.exceptions.HttpException;
 import com.example.springboot_education.repositories.RoleJpaRepository;
 import com.example.springboot_education.repositories.UserRoleRepository;
 import com.example.springboot_education.repositories.UsersJpaRepository;
-import com.example.springboot_education.entities.Users;
-import com.example.springboot_education.entities.UserRole;
-import com.example.springboot_education.entities.UserRoleId;
-import com.example.springboot_education.exceptions.HttpException;
-import com.example.springboot_education.events.RoleAssignedEvent;
-import com.example.springboot_education.events.RoleUnassignedEvent;
 
 
 @Service
@@ -44,16 +44,18 @@ public class RoleService {
     }
 
    public static RoleResponseDto toRoleDto(Role role) {
-    List<UserSummaryDto> users = role.getUserRoles().stream()
-            .map(userRole -> {
-                Users user = userRole.getUser();
-                return UserSummaryDto.builder()
-                        .id(user.getId())
-                        .username(user.getUsername())
-                        .email(user.getEmail())
-                        .build();
-            })
-            .collect(Collectors.toList());
+    List<UserSummaryDto> users = (role.getUserRoles() != null)
+            ? role.getUserRoles().stream()
+                .map(userRole -> {
+                    Users user = userRole.getUser();
+                    return UserSummaryDto.builder()
+                            .id(user.getId())
+                            .username(user.getUsername())
+                            .email(user.getEmail())
+                            .build();
+                })
+                .collect(Collectors.toList())
+            : List.of();  // Trường hợp null thì trả về list rỗng
 
     return RoleResponseDto.builder()
             .id(role.getId())
@@ -63,6 +65,7 @@ public class RoleService {
             .users(users)
             .build();
 }
+
 
     public Role create(CreateRoleRequestDto data) {
         Role role = new Role();
